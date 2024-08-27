@@ -1,0 +1,19 @@
+{
+  "Version": 1,
+  "Hash": "ux8TeR4+KNOprD9DvDHBXFOZyB+Y8Bsm2/hnrpxzrCI=",
+  "Source": "OrobaSoft.API",
+  "BasePath": "_content/OrobaSoft.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "OrobaSoft.API\\wwwroot",
+      "Source": "OrobaSoft.API",
+      "ContentRoot": "D:\\Task\\TaskOrobaSoft\\Invoice-Task\\OrobaSoft.API\\wwwroot\\",
+      "BasePath": "_content/OrobaSoft.API",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": []
+}

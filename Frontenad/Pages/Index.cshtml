@@ -1,0 +1,109 @@
+﻿@page
+@* @model invoiceModel *@
+@{
+    ViewData["Title"] = "invoice Management";
+}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<h2>invoice Management</h2>
+
+<div>
+    <form id="invoiceForm">
+        <label for="invoiceNumber">Invoice Number:</label>
+        <input type="text" id="invoiceNumber" name="invoiceNumber" required />
+
+        <label for="invoiceName">Invoice Name:</label>
+        <input type="text" id="invoiceName" name="invoiceName" required />
+
+        <button type="button" onclick="saveinvoice()">Save</button>
+        
+    </form>
+</div>
+
+<table id="invoiceTable">
+    <thead>
+        <tr>
+            <th>invoice Number</th>
+            <th>invoice Name</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- invoice rows will be populated here by JavaScript -->
+    </tbody>
+</table>
+
+<script>
+    var baseUrl = "https://localhost:7140";
+    // Function to save or update an invoice
+    function saveinvoice() {
+
+        const invoiceData = {
+            invoiceNumber: document.getElementById('invoiceNumber').value,
+            invoiceName: document.getElementById('invoiceName').value,
+        };
+
+        const url = baseUrl + '/api/OrobaSoft';
+
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(invoiceData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert('invoice saved successfully');
+                loadinvoices();
+                resetForm();
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    // Function to delete an invoice
+    function deleteinvoice(invoiceId) {
+       
+        fetch(`${baseUrl}/api/OrobaSoft/Deleteinvoice/${invoiceId}`, {
+            method: 'DELETE'
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert('invoice deleted successfully');
+                loadinvoices();
+                resetForm();
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    // Function to load invoices and display them in the table
+    function loadinvoices() {
+
+        fetch(`${baseUrl}/api/OrobaSoft/GetAllinvoice`)
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.getElementById('invoiceTable').getElementsByTagName('tbody')[0];
+                tbody.innerHTML = ''; // Clear existing rows
+
+                data.forEach(invoice => {
+                    const row = tbody.insertRow();
+                    row.insertCell(0).textContent = invoice.invoiceNumber;
+                    row.insertCell(1).textContent = invoice.invoiceName;
+                    const actionCell = row.insertCell(2);
+                    actionCell.innerHTML = `<button type="button" onclick="deleteinvoice('${invoice.id}')">Delete</button>`;
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+
+    // Function to reset the form
+    function resetForm() {
+        document.getElementById('invoiceForm').reset();
+        document.getElementById('invoiceId').value = '';
+    }
+
+    // Load invoices when the page loads
+    window.onload = loadinvoices;
+</script>
